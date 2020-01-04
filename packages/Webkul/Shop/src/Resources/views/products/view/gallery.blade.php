@@ -10,7 +10,7 @@
 
     <product-gallery></product-gallery>
 
-    @include ('shop::products.view.product-add')
+
 
 </div>
 

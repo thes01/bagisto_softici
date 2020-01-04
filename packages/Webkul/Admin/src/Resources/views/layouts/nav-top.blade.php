@@ -28,7 +28,7 @@
 
                 <div class="dropdown-list bottom-right">
                     <div class="dropdown-container">
-                        <label>Account</label>
+                        <label>Účet</label>
                         <ul>
                             <li>
                                 <a href="{{ route('shop.home.index') }}" target="_blank">{{ trans('admin::app.layouts.visit-shop') }}</a>

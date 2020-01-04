@@ -2,9 +2,11 @@
 
 Route::group(['middleware' => ['web', 'locale', 'theme', 'currency']], function () {
     //Store front home
-    Route::get('/', 'Webkul\Shop\Http\Controllers\HomeController@index')->defaults('_config', [
-        'view' => 'shop::home.index'
-    ])->name('shop.home.index');
+    Route::get('/eshop', 'Webkul\Shop\Http\Controllers\HomeController@index')->defaults('_config', [
+        'view' => 'shop::home.index_eshop'
+    ])->name('eshop');
+
+    Route::get('/', 'App\Http\Controllers\HomeController@index')->name('shop.home.index');
 
     //subscription
     //subscribe

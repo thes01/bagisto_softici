@@ -313,6 +313,10 @@ class Cart {
 
         $weight = ($product->type == 'configurable' ? $childProduct->weight : $product->weight);
 
+        if (!$weight) {
+            $weight = 0;
+        }
+
         $parentData = [
             'sku' => $product->sku,
             'quantity' => $data['quantity'],
@@ -931,10 +935,15 @@ class Cart {
             if (! $taxCategory)
                 continue;
 
-            $taxRates = $taxCategory->tax_rates()->where([
-                    'state' => $shippingAddress->state,
-                    'country' => $shippingAddress->country,
-                ])->orderBy('tax_rate', 'desc')->get();
+            $taxRatesQuery = $taxCategory->tax_rates()->where([
+                'country' => $shippingAddress->country
+            ]);
+            
+            $taxRatesQuery->where(function ($q) use ($shippingAddress) {
+                $q->where('state', '*')->orWhere('state', $shippingAddress->state);
+            });
+
+            $taxRates = $taxRatesQuery->orderBy('tax_rate', 'desc')->get();
 
             foreach ($taxRates as $rate) {
                 $haveTaxRate = false;

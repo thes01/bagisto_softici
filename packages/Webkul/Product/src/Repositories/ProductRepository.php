@@ -127,7 +127,8 @@ class ProductRepository extends Repository
             }
 
             foreach (array_permutation($super_attributes) as $permutation) {
-                $this->createVariant($product, $permutation);
+                $variant = $this->createVariant($product, $permutation);
+                Event::fire('catalog.product.create.after', $variant);
             }
         }
 
@@ -359,6 +360,8 @@ class ProductRepository extends Repository
         }
 
         $this->productInventory->saveInventories($data, $variant);
+
+        // add event
 
         return $variant;
     }

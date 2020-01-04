@@ -14,6 +14,10 @@
     {!! view_render_event('bagisto.shop.products.view.before', ['product' => $product]) !!}
 
     <section class="product-detail">
+        <div class="row">
+            <p style="padding-left: 10px">
+                <a href="{{ route('eshop') }}"><i class="fas fa-chevron-left"></i>&nbsp; Zpět</a></p>
+        </div>
 
         <div class="layouter">
             <product-view>
@@ -32,22 +36,21 @@
 
                         @include ('shop::products.review', ['product' => $product])
 
-                        @include ('shop::products.price', ['product' => $product])
+                        <div class="row">
+                            <div class="col-2" style="width: 200px;">@include ('shop::products.price', ['product' => $product])</div>
 
-                        @include ('shop::products.view.stock', ['product' => $product])
+
+                            <div class="col-2" style="; width: 70%;">@include ('shop::products.view.stock', ['product' => $product])</div>
+                            <div class="col-8" style="visibility: hidden">Další popis který  ale není vidět</div>
+                        </div>
 
                         {!! view_render_event('bagisto.shop.products.view.short_description.before', ['product' => $product]) !!}
 
-                        <div class="description">
-                            {!! $product->short_description !!}
-                        </div>
+                        {!! view_render_event('bagisto.shop.products.view.quantity.before', ['product' => $product]) !!}
 
                         {!! view_render_event('bagisto.shop.products.view.short_description.after', ['product' => $product]) !!}
 
-
-                        {!! view_render_event('bagisto.shop.products.view.quantity.before', ['product' => $product]) !!}
-
-                        <div class="quantity control-group" :class="[errors.has('quantity') ? 'has-error' : '']">
+                        <div style="display: none;" class="quantity control-group" :class="[errors.has('quantity') ? 'has-error' : '']">
 
                             <label class="required">{{ __('shop::app.products.quantity') }}</label>
 
@@ -68,13 +71,30 @@
                             <input type="hidden" value="false" name="is_configurable">
                         @endif
 
-                        @include ('shop::products.view.configurable-options')
+
+                        <div class="row">
+
+
+                            @if ($product->type == 'configurable')
+                                <div class="col-2" style="width: 100px;">@include ('shop::products.view.configurable-options')</div>
+                            <div class="col-2" style="width: 80%;"> <i class="fas fa-ruler"></i>&nbsp; Tabulka velikostí</div>
+                            <div class="col-8" style="visibility: hidden">Další popis který  ale není vidět</div>
+                            @endif
+                        </div>
+                        <p></p>
+
+                        @include ('shop::products.view.product-add')
+                        <p></p>
+                        <div class="description">
+                            {!! $product->short_description !!}
+                        </div>
+
 
                         {!! view_render_event('bagisto.shop.products.view.description.before', ['product' => $product]) !!}
 
                         <accordian :title="'{{ __('shop::app.products.description') }}'" :active="true">
                             <div slot="header">
-                                {{ __('shop::app.products.description') }}
+                                {{ __('Podrobnosti') }}
                                 <i class="icon expand-icon right"></i>
                             </div>
 
@@ -92,6 +112,7 @@
                         @include ('shop::products.view.reviews')
                     </div>
                 </div>
+
             </product-view>
         </div>
 

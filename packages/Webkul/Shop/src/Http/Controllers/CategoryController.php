@@ -64,7 +64,39 @@ class CategoryController extends Controller
     public function index($slug)
     {
         $category = $this->category->findBySlugOrFail($slug);
+        $breadcrumbs = $this->getBreadcrumbs($category);
 
-        return view($this->_config['view'], compact('category'));
+        $categories = [];
+
+        foreach (app('Webkul\Category\Repositories\CategoryRepository')->getVisibleCategoryTree(core()->getCurrentChannel()->root_category_id) as $cat) {
+            if ($cat->slug)
+                array_push($categories, $cat);
+        }
+
+        return view($this->_config['view'], compact('category', 'breadcrumbs', 'categories'));
+    }
+
+    private function getBreadcrumbs($category) {
+        $breadcrumbs = collect([
+            ['name' => 'E-shop', 'slug' => 'eshop']
+        ]);
+
+        // todo: extend Controller instead of writing in the Core
+        // todo: czech translations
+        $breadcrumbsCategories = $category->ancestors()->where('parent_id', '!=', null)->get()->merge([$category]);
+
+        $breadcrumbs = $breadcrumbs->merge($breadcrumbsCategories->map(function ($c) {
+            return [
+                'name' => $c->name,
+                // todo: translatable route
+                'slug' => 'categories/'.$c->slug
+            ];
+        }));
+
+        return $breadcrumbs;
+
+        // $activeSlugs = $breadcrumbsCategories->map(function ($c) {
+        //     return $c->slug;
+        // });
     }
 }

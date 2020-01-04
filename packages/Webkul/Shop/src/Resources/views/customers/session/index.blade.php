@@ -6,7 +6,9 @@
 
 @section('content-wrapper')
 
-    <div class="auth-content">
+
+
+    <div class="auth-content" id="login_">
         <div class="sign-up-text">
             {{ __('shop::app.customer.login-text.no_account') }} - <a href="{{ route('customer.register.index') }}">{{ __('shop::app.customer.login-text.title') }}</a>
         </div>
@@ -15,8 +17,22 @@
 
         <form method="POST" action="{{ route('customer.session.create') }}" @submit.prevent="onSubmit">
             {{ csrf_field() }}
+            <div class="loginhead">
+                <div class="row">
+
+                        <div class="col-6 active">
+                            Přihlášení
+                        </div>
+
+
+                        <div onclick="location.href = '/customer/register'" class="col-6 inactive">
+                            Registrace
+                        </div>
+
+                </div>
+            </div>
             <div class="login-form">
-                <div class="login-text">{{ __('shop::app.customer.login-form.title') }}</div>
+
 
                 {!! view_render_event('bagisto.shop.customers.login_form_controls.before') !!}
 
@@ -52,5 +68,4 @@
 
         {!! view_render_event('bagisto.shop.customers.login.after') !!}
     </div>
-
 @endsection

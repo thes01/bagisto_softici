@@ -12,7 +12,12 @@
             ></image-item>
         </div>
 
+        {{ images  }}
+
+        <input class="btn btn-lg btn-primary" style="display: inline-block; width: auto" type="file" v-validate="'mimes:image/*'" accept="image/*" ref="imagesInput" multiple @change="createMultipleFiles($event)" />
+
         <label class="btn btn-lg btn-primary" style="display: inline-block; width: auto" @click="createFileType">{{ buttonLabel }}</label>
+        <!-- <label class="btn btn-lg btn-primary" style="display: inline-block; width: auto" v-if="multiple" @click="invokeFileUpload">Nahrát více obrázků</label> -->
     </div>
 </template>
 
@@ -100,6 +105,29 @@
                 this.imageCount++;
 
                 this.items.push({'id': 'image_' + this.imageCount});
+            },
+
+            createMultipleFiles (event) {
+                var imagesInput = this.$refs.imagesInput;
+
+                for (let file of imagesInput.files) {
+                    if(file.type.includes('image/')) {
+                        var reader = new FileReader();
+
+                        reader.onload = (e) => {
+                            // this.images.push({
+
+                            // });
+
+                            // this.imageData = e.target.result;
+                        }
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        imagesInput.value = "";
+                        alert('Only images (.jpeg, .jpg, .png, ..) are allowed.');
+                    }
+                }
             },
 
             removeImage (image) {

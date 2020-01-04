@@ -70,10 +70,10 @@ class ProductForm extends FormRequest
     {
         $this->rules = [
             'sku' => ['required', 'unique:products,sku,' . $this->id, new \Webkul\Core\Contracts\Validations\Slug],
-            'variants.*.name' => 'required',
+            'variants.*.name' => '',
             'variants.*.sku' => 'required',
             'variants.*.price' => 'required',
-            'variants.*.weight' => 'required',
+            'variants.*.weight' => '',
             'images.*' => 'mimes:jpeg,jpg,bmp,png',
         ];
 

@@ -31,6 +31,7 @@ class Shipping
         $this->removeAllShippingRates();
 
         foreach (Config::get('carriers') as $shippingMethod) {
+
             $object = new $shippingMethod['class'];
 
             if ($rates = $object->calculate()) {

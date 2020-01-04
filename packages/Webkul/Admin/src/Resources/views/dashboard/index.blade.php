@@ -162,9 +162,9 @@
                                                 </div>
 
                                                 <div class="info">
-                                                    {{ __('admin::app.dashboard.product-count', ['count' => $item->total_products]) }}
+                                                    {{ trans_choice('admin::app.dashboard.product-count', $item->total_products, ['count' => $item->total_products]) }}
                                                     &nbsp;.&nbsp;
-                                                    {{ __('admin::app.dashboard.sale-count', ['count' => $item->total_qty_ordered]) }}
+                                                    {{ trans_choice('admin::app.dashboard.sale-count', $item->total_qty_ordered, ['count' => $item->total_qty_ordered]) }}
                                                 </div>
                                             </div>
 
@@ -221,7 +221,7 @@
                                             </div>
 
                                             <div class="info">
-                                                {{ __('admin::app.dashboard.sale-count', ['count' => $item->total_qty_ordered]) }}
+                                                {{ trans_choice('admin::app.dashboard.sale-count', $item->total_qty_ordered, ['count' => $item->total_qty_ordered]) }}
                                             </div>
                                         </div>
 
@@ -271,7 +271,7 @@
                                             </div>
 
                                             <div class="info">
-                                                {{ __('admin::app.dashboard.order-count', ['count' => $item->total_orders]) }}
+                                                {{ trans_choice('admin::app.dashboard.order-count', $item->total_orders, ['count' => $item->total_orders]) }}
                                                     &nbsp;.&nbsp;
                                                 {{ __('admin::app.dashboard.revenue', [
                                                     'total' => core()->formatBasePrice($item->total_base_grand_total)

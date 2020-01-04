@@ -32,7 +32,17 @@ use Webkul\Core\Repositories\SliderRepository;
         $currentChannel = core()->getCurrentChannel();
         $sliderData = $this->sliderRepository->findByField('channel_id', $currentChannel->id)->toArray();
 
-        return view($this->_config['view'], compact('sliderData'));
+        // todo rewrite outside core
+
+        // $activeSlugs = [];
+        $categories = [];
+
+        foreach (app('Webkul\Category\Repositories\CategoryRepository')->getVisibleCategoryTree(core()->getCurrentChannel()->root_category_id) as $cat) {
+            if ($cat->slug)
+                array_push($categories, $cat);
+        }
+
+        return view($this->_config['view'], compact('sliderData', 'categories'));
     }
 
     /**
