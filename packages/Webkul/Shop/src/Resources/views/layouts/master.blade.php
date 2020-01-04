@@ -4,11 +4,13 @@
 <head>
 
     <title>@yield('page_title')</title>
-    <meta charset="utf-8">
+
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="content-language" content="{{ app()->getLocale() }}">
+
     <link rel="stylesheet" href="{{ bagisto_asset('css/shop.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/webkul/ui/assets/css/ui.css') }}">
 
@@ -22,7 +24,9 @@
     @yield('head')
 
     @section('seo')
-        <meta name="description" content="{{ core()->getCurrentChannel()->description }}"/>
+        @if (! request()->is('/'))
+            <meta name="description" content="{{ core()->getCurrentChannel()->description }}"/>
+        @endif
     @show
 
     @stack('css')
@@ -31,7 +35,8 @@
 
 </head>
 
-<body @if (app()->getLocale() == 'ar') class="rtl" @endif style="scroll-behavior: smooth;">
+
+<body @if (core()->getCurrentLocale()->direction == 'rtl') class="rtl" @endif style="scroll-behavior: smooth;">
 
     {!! view_render_event('bagisto.shop.layout.body.before') !!}
 
@@ -66,16 +71,17 @@
 
         {!! view_render_event('bagisto.shop.layout.footer.after') !!}
 
-        <div class="footer-bottom">
-            <p>
-                @if (core()->getConfigData('general.content.footer.footer_content'))
-                    {{ core()->getConfigData('general.content.footer.footer_content') }}
-                @else
-                    {{ trans('admin::app.footer.copy-right') }}
-                @endif
-            </p>
-        </div>
-
+        @if (core()->getConfigData('general.content.footer.footer_toggle'))
+            <div class="footer">
+                <p style="text-align: center;">
+                    @if (core()->getConfigData('general.content.footer.footer_content'))
+                        {{ core()->getConfigData('general.content.footer.footer_content') }}
+                    @else
+                        {{ trans('admin::app.footer.copy-right') }}
+                    @endif
+                </p>
+            </div>
+        @endif
     </div>
 
     <script type="text/javascript">

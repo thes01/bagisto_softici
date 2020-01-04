@@ -130,12 +130,12 @@
             <div class="graph-stats">
 
                 <div class="left-card-container graph">
-                    <div class="card">
+                    <div class="card" style="overflow: hidden;">
                         <div class="card-title" style="margin-bottom: 30px;">
                             {{ __('admin::app.dashboard.sales') }}
                         </div>
 
-                        <div class="card-info">
+                        <div class="card-info" style="height: 100%;">
 
                             <canvas id="myChart" style="width: 100%; height: 87%"></canvas>
 
@@ -274,7 +274,7 @@
                                                 {{ trans_choice('admin::app.dashboard.order-count', $item->total_orders, ['count' => $item->total_orders]) }}
                                                     &nbsp;.&nbsp;
                                                 {{ __('admin::app.dashboard.revenue', [
-                                                    'total' => core()->formatBasePrice($item->total_base_grand_total)
+                                                    'total' => core()->formatBasePrice($item->total_base_grand_total_invoiced)
                                                     ])
                                                 }}
                                             </div>

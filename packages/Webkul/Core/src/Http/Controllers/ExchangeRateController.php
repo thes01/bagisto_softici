@@ -3,10 +3,9 @@
 namespace Webkul\Core\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
-use Webkul\Core\Repositories\ExchangeRateRepository as ExchangeRate;
 use Webkul\Core\Repositories\CurrencyRepository as Currency;
+use Webkul\Core\Repositories\ExchangeRateRepository as ExchangeRate;
 
 /**
  * ExchangeRate controller
@@ -24,9 +23,7 @@ class ExchangeRateController extends Controller
     protected $_config;
 
     /**
-     * ExchangeRateRepository object
-     *
-     * @var array
+     * ExchangeRateRepository instance
      */
     protected $exchangeRate;
 
@@ -44,11 +41,11 @@ class ExchangeRateController extends Controller
      * @param  \Webkul\Core\Repositories\CurrencyRepository      $currency
      * @return void
      */
-    public function __construct(ExchangeRate $exchangeRate, Currency $currency)
+    public function __construct(Currency $currency, ExchangeRate $exchangeRate)
     {
-        $this->exchangeRate = $exchangeRate;
-
         $this->currency = $currency;
+
+        $this->exchangeRate = $exchangeRate;
 
         $this->_config = request('_config');
     }
@@ -137,6 +134,42 @@ class ExchangeRateController extends Controller
         session()->flash('success', trans('admin::app.settings.exchange_rates.update-success'));
 
         return redirect()->route($this->_config['redirect']);
+    }
+
+    /**
+     * Update Rates Using Exchange Rates API
+     *
+     * @return void
+     */
+    public function updateRates($service)
+    {
+        $exchangeService = config('services.exchange-api')[$service];
+
+        if (is_array($exchangeService)) {
+            if (! array_key_exists('class', $exchangeService)) {
+                return response()->json([
+                    'success' => false,
+                    'rates' => null,
+                    'error' => trans('admin::app.exchange-rate.exchange-class-not-found', [
+                        'service' => $service
+                    ])
+                ], 400);
+            }
+
+            $exchangeServiceInstance = new $exchangeService['class'];
+            $updatedRates = $exchangeServiceInstance->fetchRates();
+
+            return response()->json([
+                'success' => true,
+                'rates' => 'rates'
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'rates' => null,
+                'error' => trans('admin::app.exchange-rate.invalid-config')
+            ], 400);
+        }
     }
 
     /**

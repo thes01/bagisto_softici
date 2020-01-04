@@ -8,6 +8,8 @@ use Webkul\Admin\Http\Controllers\Controller;
 use Webkul\Customer\Repositories\CustomerRepository as Customer;
 use Webkul\Customer\Repositories\CustomerGroupRepository as CustomerGroup;
 use Webkul\Core\Repositories\ChannelRepository as Channel;
+use Webkul\Admin\Mail\NewCustomerNotification;
+use Mail;
 
 /**
  * Customer controlller
@@ -98,7 +100,6 @@ class CustomerController extends Controller
     public function store()
     {
         $this->validate(request(), [
-            'channel_id' => 'required',
             'first_name' => 'string|required',
             'last_name' => 'string|required',
             'gender' => 'required',
@@ -108,13 +109,19 @@ class CustomerController extends Controller
 
         $data = request()->all();
 
-        $password = bcrypt(rand(100000,10000000));
+        $password = rand(100000,10000000);
 
-        $data['password'] = $password;
+        $data['password'] = bcrypt($password);
 
         $data['is_verified'] = 1;
 
-        $this->customer->create($data);
+        $customer = $this->customer->create($data);
+
+        try {
+            Mail::queue(new NewCustomerNotification($customer, $password));
+        } catch (\Exception $e) {
+
+        }
 
         session()->flash('success', trans('admin::app.response.create-success', ['name' => 'Customer']));
 
@@ -148,7 +155,6 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate(request(), [
-            'channel_id' => 'required',
             'first_name' => 'string|required',
             'last_name' => 'string|required',
             'gender' => 'required',

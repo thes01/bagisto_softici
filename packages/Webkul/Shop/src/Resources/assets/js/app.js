@@ -4,8 +4,14 @@ window.VeeValidate = require("vee-validate");
 window.axios = require("axios");
 require("./bootstrap");
 require("ez-plus/src/jquery.ez-plus.js");
+locales = require("./lang/locales.js");
 
-Vue.use(VeeValidate);
+Vue.use(VeeValidate, {
+    dictionary: {
+        ar: { messages: locales.messages.ar }
+    }
+});
+
 Vue.prototype.$http = axios
 
 window.eventBus = new Vue();
@@ -14,7 +20,6 @@ Vue.component("image-slider", require("./components/image-slider.vue"));
 Vue.component("vue-slider", require("vue-slider-component"));
 
 $(document).ready(function () {
-
     const app = new Vue({
         el: "#app",
 
@@ -25,6 +30,8 @@ $(document).ready(function () {
         mounted: function () {
             this.addServerErrors();
             this.addFlashMessages();
+
+            this.$validator.localize(document.documentElement.lang);
         },
 
         methods: {

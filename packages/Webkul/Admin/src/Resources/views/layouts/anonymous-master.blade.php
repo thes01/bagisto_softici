@@ -67,7 +67,7 @@
 
         {!! view_render_event('bagisto.admin.layout.head') !!}
     </head>
-    <body @if (app()->getLocale() == 'ar') class="rtl" @endif style="scroll-behavior: smooth;">
+    <body @if (core()->getCurrentLocale()->direction == 'rtl') class="rtl" @endif style="scroll-behavior: smooth;">
         <div id="app" class="container">
 
             <flash-wrapper ref='flashes'></flash-wrapper>
@@ -90,16 +90,17 @@
 
                     {!! view_render_event('bagisto.admin.layout.content.after') !!}
 
-                    <div class="footer">
-                        <p>
-                            @if (core()->getConfigData('general.content.footer.footer_content'))
-                                {{ core()->getConfigData('general.content.footer.footer_content') }}
-                            @else
-                                {{ trans('admin::app.footer.copy-right') }}
-                            @endif
-                        </p>
-                    </div>
-
+                    @if (core()->getConfigData('general.content.footer.footer_toggle'))
+                        <div class="footer">
+                            <p style="text-align: center;">
+                                @if (core()->getConfigData('general.content.footer.footer_content'))
+                                    {{ core()->getConfigData('general.content.footer.footer_content') }}
+                                @else
+                                    {{ trans('admin::app.footer.copy-right') }}
+                                @endif
+                            </p>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -117,8 +118,10 @@
             @endif
 
             window.serverErrors = [];
-            @if (count($errors))
-                window.serverErrors = @json($errors->getMessages());
+            @if (isset($errors))
+                @if (count($errors))
+                    window.serverErrors = @json($errors->getMessages());
+                @endif
             @endif
         </script>
 

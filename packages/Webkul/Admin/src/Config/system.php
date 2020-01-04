@@ -8,7 +8,7 @@ return [
     ], [
         'key' => 'catalog.products',
         'name' => 'admin::app.admin.system.products',
-        'sort' => 1,
+        'sort' => 2
     ], [
         'key' => 'catalog.products.review',
         'name' => 'admin::app.admin.system.review',
@@ -108,7 +108,7 @@ return [
                 'channel_based' => true,
             ]
         ]
-    ],[
+    ], [
         'key' => 'general.content',
         'name' => 'admin::app.admin.system.content',
         'sort' => 2,
@@ -123,6 +123,21 @@ return [
                 'type' => 'text',
                 'channel_based' => true,
                 'locale_based' => true
+            ], [
+                'name' => 'footer_toggle',
+                'title' => 'admin::app.admin.system.footer-toggle',
+                'type' => 'select',
+                'options' => [
+                    [
+                        'title' => 'True',
+                        'value' => 1
+                    ], [
+                        'title' => 'False',
+                        'value' => 0
+                    ]
+                ],
+                'locale_based' => true,
+                'channel_based' => true,
             ]
         ]
     ], [
